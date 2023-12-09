@@ -3,12 +3,11 @@
 #   .github/workflows/auto-build-on-base-image-change.yml
 #
 
-name: Regular base image update check
+name: auto build on base image change
 on:
   schedule:
     - cron: "23 13 3 * *"
   workflow_dispatch:
-
 
 jobs:
 
@@ -17,7 +16,8 @@ jobs:
     steps:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Checkout GitHub Action
+        uses: actions/checkout@v2
 
       - name: Docker Image Update Checker
         id: baseupdatecheck
@@ -26,11 +26,17 @@ jobs:
           base-image: plexinc/pms-docker:latest
           image: chazlarson/amd-plex-mod # update for your image
 
-      # only execute subsequent steps if an update is actually NEEDED.
-      # unfortunately we need to add an if-condition to all steps now
-      # because a clean exit can't be triggered within a job it seems
-      # (a cancellation is NOT the same and triggers a failure email)
-      # see also https://github.com/actions/runner/issues/662
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: 'Build Inventory Image'
+        run: |
+          docker build . --tag ghcr.io/chazlarson/amd-plex-mod:latest
+          docker push ghcr.io/chazlarson/amd-plex-mod:latest
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
