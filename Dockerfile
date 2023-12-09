@@ -1,4 +1,4 @@
-FROM plexinc/pms-docker:1.22.2.4282-a97b03fad
+FROM plexinc/pms-docker:latest
 
 RUN apt-get update && \
   apt-get install -y software-properties-common && \
