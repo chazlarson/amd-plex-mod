@@ -26,17 +26,17 @@ jobs:
           base-image: plexinc/pms-docker:latest
           image: chazlarson/amd-plex-mod # update for your image
 
-      - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
+      # - name: 'Login to GitHub Container Registry'
+      #   uses: docker/login-action@v1
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{github.actor}}
+      #     password: ${{secrets.GITHUB_TOKEN}}
 
-      - name: 'Build Inventory Image'
-        run: |
-          docker build . --tag ghcr.io/chazlarson/amd-plex-mod:latest
-          docker push ghcr.io/chazlarson/amd-plex-mod:latest
+      # - name: 'Build Inventory Image'
+      #   run: |
+      #     docker build . --tag ghcr.io/chazlarson/amd-plex-mod:latest
+      #     docker push ghcr.io/chazlarson/amd-plex-mod:latest
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
